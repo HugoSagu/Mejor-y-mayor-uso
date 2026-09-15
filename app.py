@@ -221,7 +221,10 @@ def main():
             st.markdown("<p style='color:#FF5F1F; font-weight:bold; letter-spacing:1px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:5px; margin-bottom:8px;'>⚖️ POTENCIAL LEGAL Y NORMATIVO</p>", unsafe_allow_html=True)
             m1, m2 = st.columns(2)
             m1.metric("Zonificación", f"{data.get('tipo_uso', 'S/D')}")
-            m2.metric("Niveles Máx", f"{int(data.get('altura_max', 0))} Pisos")
+            # LÍNEA CORREGIDA:
+            alt_val = data.get('altura_max')
+            niveles = int(alt_val) if pd.notna(alt_val) else 0
+            m2.metric("Niveles Máx", f"{niveles} Pisos")
 
             m3, m4 = st.columns(2)
             cus_val = data.get('cus', 0.0)
@@ -244,7 +247,16 @@ def main():
             c2.metric("Amenity Score H3", f"{data.get('amenity_score', 0.0):.1f} / 100")
 
             c3, c4 = st.columns(2)
-            c3.metric("Población en Manzana", f"{int(data.get('POBTOT', 0))} hab")
+
+            # LÍNEA BLINDADA:
+
+            # LÍNEA ORIGINAL:
+
+            # LÍNEA BLINDADA:
+            pob_val = data.get('POBTOT')
+            pob_total = int(pob_val) if pd.notna(pob_val) else 0
+            c3.metric("Población en Manzana", f"{pob_total} hab")
+
             c4.metric("Escolaridad Media", f"{data.get('GRAPROES', 0.0):.1f} Años")
 
             c5, c6 = st.columns(2)
