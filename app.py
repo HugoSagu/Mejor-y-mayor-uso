@@ -75,7 +75,7 @@ st.markdown("""
 @st.cache_resource
 def load_engines():
     base_dir = os.path.dirname(__file__)
-    
+
     # 1. Motor de Manzanas HBU
     path_mza = os.path.join(base_dir, 'data', 'master_jalisco_hbu_scout.parquet')
     if not os.path.exists(path_mza): path_mza = 'master_jalisco_hbu_scout.parquet'
@@ -160,7 +160,7 @@ def main():
             if isinstance(poi_indices, np.int64): poi_indices = [poi_indices]
 
         nearby_pois = df_poi.iloc[poi_indices].copy()
-        
+
         # Calcular distancia exacta a cada POI
         d_lats = nearby_pois['latitud'].values - lat_now
         d_lons = (nearby_pois['longitud'].values - lon_now) * np.cos(np.radians(lat_now))
@@ -278,8 +278,9 @@ def main():
         line_data = pd.DataFrame([{"start": [u_lon, u_lat], "end": [node_lon, node_lat]}])
 
         # 3. Capa de POIs DENUE con color semántico
-        nearby_pois['color'] = nearby_pois['cat_hbu'].map(COLOR_MAP)
-        nearby_pois['radius'] = 10
+        # LÍNEA CORREGIDA:
+
+        nearby_pois['color'] = [COLOR_MAP.get(str(cat), [200, 200, 200, 200]) for cat in nearby_pois['cat_hbu']]
 
         view_state = pdk.ViewState(
             latitude=(u_lat + node_lat) / 2,
